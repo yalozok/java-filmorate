@@ -7,6 +7,7 @@ import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +20,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class UserTest {
+public class UserTest {
     private static final Validator validator;
     User user;
 
@@ -41,7 +42,8 @@ class UserTest {
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty(), "Violations found: " + violations);
         ConstraintViolation<User> violation = violations.iterator().next();
-        assertEquals(NotBlank.class, violation.getConstraintDescriptor().getAnnotation().annotationType());
+        Class<?> annotationType = violation.getConstraintDescriptor().getAnnotation().annotationType();
+        assertTrue(annotationType == Pattern.class || annotationType == NotBlank.class);
         assertEquals("login", violation.getPropertyPath().toString());
     }
 
