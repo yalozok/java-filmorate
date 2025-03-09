@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -25,8 +27,28 @@ public class Film {
     @Positive(message = "Продолжительность фильма должна быть положительной")
     private int duration;
 
-    @AssertTrue(message = "Дата редиза не может быть раньше 28 декабря 1895")
+    @AssertTrue(message = "Дата релиза не может быть раньше 28 декабря 1895")
     private boolean isValidReleaseDate() {
-        return releaseDate.isAfter(CINEMA_BIRTHDAY);
+        return releaseDate != null && releaseDate.isAfter(CINEMA_BIRTHDAY);
+    }
+
+    public Film() {
+    }
+
+    @JsonCreator
+    public Film(
+            @JsonProperty("name") String name,
+            @JsonProperty("description") String description,
+            @JsonProperty("releaseDate") LocalDate releaseDate,
+            @JsonProperty("duration") int duration
+    ) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+
+        if (releaseDate != null && releaseDate.isBefore(CINEMA_BIRTHDAY)) {
+            throw new IllegalArgumentException("Дата релиза не может быть раньше 28 декабря 1895");
+        }
     }
 }
