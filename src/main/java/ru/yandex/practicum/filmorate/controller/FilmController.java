@@ -40,7 +40,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateUser(@RequestBody @Validated({Default.class, Validator.Update.class}) Film film) {
+    public Film updateFilm(@RequestBody @Validated({Default.class, Validator.Update.class}) Film film) {
         log.info("Update film: {} - Started", film);
         if (!films.containsKey(film.getId())) {
             log.error("Фильм с id {} не найден", film.getId());
