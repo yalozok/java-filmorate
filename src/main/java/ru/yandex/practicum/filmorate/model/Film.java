@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 public class Film {
-    private static final LocalDate CINEMA_BIRTHDAY = LocalDate.of(1985, 12, 28);
+    private static final LocalDate CINEMA_BIRTHDAY = LocalDate.of(1895, 12, 28);
     @Null(groups = Validator.Create.class)
     @NotNull(groups = Validator.Update.class)
     private Long id;

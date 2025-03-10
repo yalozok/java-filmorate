@@ -37,12 +37,12 @@ public class FilmTest {
     }
 
     private static Stream<LocalDate> generateWrongPastDate() {
-        return Stream.of(LocalDate.of(1985, 12, 27),
-                LocalDate.of(1985, 12, 28));
+        return Stream.of(LocalDate.of(1895, 12, 27),
+                LocalDate.of(1895, 12, 28));
     }
 
     private static Stream<LocalDate> generateValidReleaseDate() {
-        return Stream.of(LocalDate.of(1985, 12, 29),
+        return Stream.of(LocalDate.of(1895, 12, 29),
                 LocalDate.now().minusDays(1));
     }
 
