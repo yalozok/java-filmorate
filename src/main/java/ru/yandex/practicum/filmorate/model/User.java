@@ -44,7 +44,7 @@ public class User {
                 @JsonProperty("birthday") LocalDate birthday) {
         this.email = email;
         this.login = login;
-        this.name = (name == null || name.isEmpty()) ? login : name; // Default name logic
+        this.name = (name == null || name.isEmpty()) ? login : name;
         this.birthday = birthday;
     }
 }
