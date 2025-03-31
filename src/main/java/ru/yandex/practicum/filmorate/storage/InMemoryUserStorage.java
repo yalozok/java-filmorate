@@ -4,12 +4,13 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private Long id = 0L;
     Map<Long, User> users = new HashMap<>();
-    Map<Long, Set<User>> userFriends = new HashMap<>();
+    Map<Long, Set<Long>> userFriends = new HashMap<>();
 
     @Override
     public List<User> getAll() {
@@ -44,30 +45,33 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(User user, User friend) {
-        Set<User> uFriends = userFriends.computeIfAbsent(user.getId(), id -> new HashSet<>());
-        uFriends.add(friend);
-        userFriends.put(user.getId(), uFriends);
+    public void addFriend(long userId, long friendId) {
+        Set<Long> uFriendIds = userFriends.computeIfAbsent(userId, id -> new HashSet<>());
+        uFriendIds.add(friendId);
+        userFriends.put(userId, uFriendIds);
 
-        Set<User> fFriends = userFriends.computeIfAbsent(friend.getId(), k -> new HashSet<>());
-        fFriends.add(user);
-        userFriends.put(friend.getId(), fFriends);
+        Set<Long> fFriendIds = userFriends.computeIfAbsent(friendId, k -> new HashSet<>());
+        fFriendIds.add(userId);
+        userFriends.put(friendId, fFriendIds);
     }
 
     @Override
-    public void removeFriend(User user, User friend) {
-        Set<User> uFriends = userFriends.computeIfAbsent(user.getId(), k -> new HashSet<>());
-        uFriends.remove(friend);
-        userFriends.put(user.getId(), uFriends);
+    public void removeFriend(long userId, long friendId) {
+        Set<Long> uFriendIds = userFriends.computeIfAbsent(userId, k -> new HashSet<>());
+        uFriendIds.remove(friendId);
+        userFriends.put(userId, uFriendIds);
 
-        Set<User> fFriends = userFriends.computeIfAbsent(friend.getId(), k -> new HashSet<>());
-        fFriends.remove(user);
-        userFriends.put(friend.getId(), fFriends);
+        Set<Long> fFriendIds = userFriends.computeIfAbsent(friendId, k -> new HashSet<>());
+        fFriendIds.remove(userId);
+        userFriends.put(friendId, fFriendIds);
     }
 
     @Override
     public Optional<List<User>> getFriends(long id) {
         return Optional.ofNullable(userFriends.get(id))
-                .map(ArrayList::new);
+                .map(friends -> friends.stream()
+                        .map(users::get)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList()));
     }
 }

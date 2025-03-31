@@ -58,19 +58,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addFriend(long userId, long friendId) {
-        final User user = userStorage.get(userId)
+        userStorage.get(userId)
                 .orElseThrow(() -> new NotFoundException("User was not found with id: " + userId));
-        final User friend = userStorage.get(friendId)
+        userStorage.get(friendId)
                 .orElseThrow(() -> new NotFoundException("User as friend was not found with id: " + friendId));
-        userStorage.addFriend(user, friend);
+        userStorage.addFriend(userId, friendId);
     }
 
     public void removeFriend(long userId, long friendId) {
-        final User user = userStorage.get(userId)
+        userStorage.get(userId)
                 .orElseThrow(() -> new NotFoundException("User was not found with id: " + userId));
-        final User friend = userStorage.get(friendId)
+        userStorage.get(friendId)
                 .orElseThrow(() -> new NotFoundException("User as friend was not found with id: " + friendId));
-        userStorage.removeFriend(user, friend);
+        userStorage.removeFriend(userId, friendId);
     }
 
     public List<User> getFriends(long userId) {
