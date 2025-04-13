@@ -32,6 +32,8 @@ public class Film {
         return releaseDate != null && releaseDate.isAfter(CINEMA_BIRTHDAY);
     }
 
+    int rating;
+
     public Film() {
     }
 

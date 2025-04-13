@@ -1,56 +1,64 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.groups.Default;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Validator;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Validated
 @Slf4j
+@RequiredArgsConstructor
 public class FilmController {
-    private Long id = 0L;
-    Map<Long, Film> films = new HashMap<>();
-
-    private Long getNextId() {
-        return ++id;
-    }
+    private final FilmService filmService;
 
     @GetMapping
-    public List<Film> findAll() {
-        log.info("Get films: {} - Started and Finished", films.size());
-        return new ArrayList<>(films.values());
+    public List<Film> getAll() {
+        return filmService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public Film get(@PathVariable long id) {
+        return filmService.get(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Film createFilm(@RequestBody @Validated({Default.class, Validator.Create.class}) Film film) {
-        log.info("Create film: {} - Started", film);
-        film.setId(getNextId());
-        films.put(film.getId(), film);
-        log.info("Create film: {} - Finished", film);
-        return film;
+    public Film add(@RequestBody @Validated({Default.class, Validator.Create.class}) Film film) {
+        return filmService.add(film);
     }
 
     @PutMapping
-    public Film updateFilm(@RequestBody @Validated({Default.class, Validator.Update.class}) Film film) {
-        log.info("Update film: {} - Started", film);
-        if (!films.containsKey(film.getId())) {
-            log.error("Фильм с id {} не найден", film.getId());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм с id: " + film.getId() + " не найден");
-        }
-        films.put(film.getId(), film);
-        log.info("Update film: {} - Finished", film);
-        return film;
+    public Film update(@RequestBody @Validated({Default.class, Validator.Update.class}) Film film) {
+        return filmService.update(film);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id) {
+        filmService.delete(id);
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public void addLike(@PathVariable long id, @PathVariable long userId) {
+        filmService.addLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public void removeLike(@PathVariable long id, @PathVariable long userId) {
+        filmService.removeLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopular(@RequestParam(defaultValue = "10") @Positive int count) {
+        return filmService.getPopular(count);
     }
 }
