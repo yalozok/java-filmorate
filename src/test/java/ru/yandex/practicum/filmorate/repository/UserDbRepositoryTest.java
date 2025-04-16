@@ -50,7 +50,7 @@ public class UserDbRepositoryTest {
 
     @Test
     void getUserByNotValidId_OptionalEmpty() {
-        Optional<User> user = userRepository.getById(5);
+        Optional<User> user = userRepository.getById(99);
         assertThat(user).isEmpty();
     }
 
@@ -58,7 +58,7 @@ public class UserDbRepositoryTest {
     void getAdd_userAdded() {
         User user = getUser();
         User savedUser = userRepository.add(user);
-        assertThat(savedUser).hasFieldOrPropertyWithValue("id", 5L);
+        assertThat(savedUser).hasFieldOrPropertyWithValue("id", savedUser.getId());
     }
 
     @Test

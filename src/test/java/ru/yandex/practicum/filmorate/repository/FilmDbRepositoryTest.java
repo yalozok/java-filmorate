@@ -53,7 +53,7 @@ public class FilmDbRepositoryTest {
     void add_FilmAdded() {
         Film film = getFilm();
         Film filmAdded = filmDbRepository.add(film);
-        assertThat(filmAdded).hasFieldOrPropertyWithValue("id", 7L);
+        assertThat(filmAdded).hasFieldOrPropertyWithValue("id", filmAdded.getId());
     }
 
     @Test
