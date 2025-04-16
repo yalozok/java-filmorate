@@ -94,9 +94,13 @@ public class UserDbRepository implements UserRepository {
 
     @Override
     public void delete(long id) {
-        String sql = "DELETE FROM USERS WHERE USER_ID = :user_id";
+        String sqlFriends = "DELETE FROM FRIENDS WHERE USER_ID = :user_id OR FRIEND_ID = :user_id";
+        String sqlLikes = "DELETE FROM LIKES WHERE USER_ID = :user_id";
+        String sqlUsers = "DELETE FROM USERS WHERE USER_ID = :user_id";
         MapSqlParameterSource params = new MapSqlParameterSource("user_id", id);
-        jdbc.update(sql, params);
+        jdbc.update(sqlLikes, params);
+        jdbc.update(sqlFriends, params);
+        jdbc.update(sqlUsers, params);
     }
 }
 

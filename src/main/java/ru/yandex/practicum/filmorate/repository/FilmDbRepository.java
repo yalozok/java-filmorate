@@ -161,10 +161,14 @@ public class FilmDbRepository implements FilmRepository {
 
     @Override
     public void delete(long id) {
-        String sql = "DELETE FROM FILMS WHERE FILM_ID = :film_id";
+        String sqlGenres = "DELETE FROM FILM_GENRE WHERE FILM_ID = :film_id";
+        String sqlLikes = "DELETE FROM LIKES WHERE FILM_ID = :film_id";
+        String sqlFilms = "DELETE FROM FILMS WHERE FILM_ID = :film_id";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("film_id", id);
-        jdbc.update(sql, params);
+        jdbc.update(sqlGenres, params);
+        jdbc.update(sqlLikes, params);
+        jdbc.update(sqlFilms, params);
     }
 
     @Override
@@ -227,20 +231,18 @@ public class FilmDbRepository implements FilmRepository {
         Map<Long, Film> filmMap = new LinkedHashMap<>();
 
         jdbc.query(sqlFilms, rs -> {
-            while (rs.next()) {
-                Film film = new Film();
-                film.setId(rs.getLong("film_id"));
-                film.setName(rs.getString("name"));
-                film.setDescription(rs.getString("description"));
-                film.setDuration(rs.getInt("duration"));
-                film.setReleaseDate(rs.getDate("release_date").toLocalDate());
-                film.setMpa(new Mpa(
-                        rs.getLong("mpa_id"),
-                        rs.getString("mpa_name")
-                ));
-                film.setGenres(new LinkedHashSet<>());
-                filmMap.put(film.getId(), film);
-            }
+            Film film = new Film();
+            film.setId(rs.getLong("film_id"));
+            film.setName(rs.getString("name"));
+            film.setDescription(rs.getString("description"));
+            film.setDuration(rs.getInt("duration"));
+            film.setReleaseDate(rs.getDate("release_date").toLocalDate());
+            film.setMpa(new Mpa(
+                    rs.getLong("mpa_id"),
+                    rs.getString("mpa_name")
+            ));
+            film.setGenres(new LinkedHashSet<>());
+            filmMap.put(film.getId(), film);
         });
 
         jdbc.query(sqlGenres, rs -> {
