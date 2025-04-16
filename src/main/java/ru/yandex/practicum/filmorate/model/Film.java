@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 
 @Data
 public class Film {
@@ -32,7 +33,8 @@ public class Film {
         return releaseDate != null && releaseDate.isAfter(CINEMA_BIRTHDAY);
     }
 
-    int rating;
+    Mpa mpa;
+    LinkedHashSet<Genre> genres;
 
     public Film() {
     }
@@ -42,12 +44,14 @@ public class Film {
             @JsonProperty("name") String name,
             @JsonProperty("description") String description,
             @JsonProperty("releaseDate") LocalDate releaseDate,
-            @JsonProperty("duration") int duration
+            @JsonProperty("duration") int duration,
+            @JsonProperty("mpa") Mpa mpa
     ) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        this.mpa = mpa;
 
         if (releaseDate != null && releaseDate.isBefore(CINEMA_BIRTHDAY)) {
             throw new IllegalArgumentException("Дата релиза не может быть раньше 28 декабря 1895");
