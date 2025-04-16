@@ -44,7 +44,7 @@ public class UserDbRepositoryTest {
         assertThat(user).isPresent()
                 .hasValueSatisfying(
                         user1 -> assertThat(user1).hasFieldOrPropertyWithValue("id", 1L)
-                                .hasFieldOrPropertyWithValue("email", "sveta@email.ru" )
+                                .hasFieldOrPropertyWithValue("email", "sveta@email.ru")
                 );
     }
 
