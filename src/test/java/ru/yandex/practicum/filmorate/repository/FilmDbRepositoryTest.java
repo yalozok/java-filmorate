@@ -65,8 +65,8 @@ public class FilmDbRepositoryTest {
         Optional<Film> filmUpdated = filmDbRepository.getById(filmAdded.getId());
         assertThat(filmUpdated).isPresent()
                 .hasValueSatisfying(
-                        filmUpdatedCheck -> assertThat(filmUpdatedCheck).
-                                hasFieldOrPropertyWithValue("name", "updated_name_film"));
+                        filmUpdatedCheck -> assertThat(filmUpdatedCheck)
+                                .hasFieldOrPropertyWithValue("name", "updated_name_film"));
     }
 
     @Test
