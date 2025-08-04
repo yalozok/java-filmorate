@@ -45,7 +45,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         Set<User> users = likes.computeIfAbsent(film.getId(), k -> new HashSet<>());
         users.add(user);
         likes.put(film.getId(), users);
-        film.setRating(users.size());
     }
 
     @Override
@@ -53,6 +52,5 @@ public class InMemoryFilmStorage implements FilmStorage {
         Set<User> users = likes.computeIfAbsent(film.getId(), k -> new HashSet<>());
         users.remove(user);
         likes.put(film.getId(), users);
-        film.setRating(users.size());
     }
 }

@@ -13,3 +13,6 @@ This is a Spring Boot application that provides a simple movie recommendation se
 - Lombok for reducing boilerplate
 - Logbook for HTTP request/response logging
 - Comprehensive testing with `@JdbcTest` and an isolated test database
+
+## Database schema:
+![](filmorate.png)
